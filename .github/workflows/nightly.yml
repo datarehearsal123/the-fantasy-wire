@@ -1,0 +1,36 @@
+
+name: Nightly Fantrax standings refresh
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 10 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Refresh standings
+        run: python scripts/refresh_standings.py
+
+      - name: Save updated standings
+        run: |
+          git config user.name "Fantasy Wire Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Fantrax standings"
+            git push
+          fi
