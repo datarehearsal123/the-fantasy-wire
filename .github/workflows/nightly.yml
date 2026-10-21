@@ -23,7 +23,7 @@ jobs:
           python-version: '3.12'
 
       - name: Refresh standings
-        run: run: python refresh.py
+        run: python refresh.py
 
       - name: Save updated standings
         run: |
